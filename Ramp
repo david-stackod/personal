@@ -1,0 +1,34 @@
+from datetime import datetime
+import pandas as pd
+
+# Sample transaction data
+data = [
+    ('2021-01-29 05:39:47.000000', 33.73),
+    ('2021-01-29 00:06:33.000000', 1450.00),
+    ('2021-01-29 20:37:37.000000', 19.35),
+    ('2021-01-30 00:04:01.000000', 6.75),
+    ('2021-01-30 07:55:26.000000', 59.37),
+    ('2021-01-30 00:58:25.000000', 400.00),
+    ('2021-01-31 00:09:01.000000', 23.10),
+    ('2021-01-31 13:00:35.000000', 19.00),
+    ('2021-01-31 01:56:35.000000', 17.33)
+]
+
+# Creating a DataFrame
+df = pd.DataFrame(data, columns=['transaction_time', 'transaction_amount'])
+
+# Convert transaction_time to datetime
+df['transaction_time'] = pd.to_datetime(df['transaction_time'])
+
+# Set the date as index
+df.set_index('transaction_time', inplace=True)
+
+# Sum transaction amounts per day
+daily_sums = df.resample('D').sum()
+
+# Calculate 3-day rolling average
+rolling_average = daily_sums.rolling(3).mean()
+
+# Retrieve the rolling average for January 31st
+rolling_average_31st = rolling_average.loc['2021-01-31']
+rolling_average_31st
